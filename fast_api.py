@@ -2,11 +2,20 @@ from fastapi import FastAPI, File, UploadFile
 import cv2
 import numpy as np
 from tensorflow.keras.models import load_model
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 model = load_model("brain.h5")
 labels = ['Glioma Tumor', 'No Tumor', 'Meningioma Tumor', 'Pituitary Tumor']
 image_size = 150
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_origins=['*']
+)
 
 def preprocess_image(img):
     img = cv2.resize(img, (image_size, image_size))
